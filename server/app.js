@@ -16,9 +16,17 @@ dotenv.config();
 const app = express();
 
 app.use(helmet());
+const clientUrls = (process.env.CLIENT_URL || '').split(',').map((url) => url.trim()).filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || '*',
+    origin: (origin, callback) => {
+      if (!origin || clientUrls.includes(origin) || /^https?:\/\/localhost:\d+$/.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('CORS policy does not allow access from this origin'));
+      }
+    },
     credentials: true,
   })
 );

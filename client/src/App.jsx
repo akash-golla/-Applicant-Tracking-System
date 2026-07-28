@@ -41,14 +41,16 @@ function App() {
         </div>
       </nav>
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/jobs" element={<JobsPage />} />
-        <Route path="/resume" element={<ResumePage />} />
-        <Route path="/ranking" element={<RankingPage />} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-      </Routes>
+      <main className="page-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/jobs" element={<JobsPage />} />
+          <Route path="/resume" element={<ResumePage />} />
+          <Route path="/ranking" element={<RankingPage />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+        </Routes>
+      </main>
     </div>
   )
 }

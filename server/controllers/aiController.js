@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import pdfParse from 'pdf-parse';
+import { PDFParse } from 'pdf-parse';
 import mammoth from 'mammoth';
 import { fileURLToPath } from 'url';
 
@@ -13,7 +13,8 @@ const extractTextFromResume = async (filePath) => {
 
   if (ext === '.pdf') {
     const buffer = fs.readFileSync(fullPath);
-    const data = await pdfParse(buffer);
+    const parser = new PDFParse({ data: buffer });
+    const data = await parser.getText();
     return data.text.replace(/\s+/g, ' ').trim();
   }
 
