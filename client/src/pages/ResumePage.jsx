@@ -37,7 +37,7 @@ function ResumePage() {
       <h2>Resume analysis</h2>
       <p>Upload a resume to extract candidate details and AI match insights.</p>
       <form onSubmit={handleUpload} className="auth-form">
-        <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={(e) => setFile(e.target.files[0])} />
+        <input type="file" accept=".pdf,.docx,.txt" onChange={(e) => setFile(e.target.files[0])} />
         <button type="submit">Analyze resume</button>
       </form>
       {message && <p className="message">{message}</p>}

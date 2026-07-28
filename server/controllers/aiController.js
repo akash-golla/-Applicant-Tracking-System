@@ -1,14 +1,33 @@
 import fs from 'fs';
 import path from 'path';
+import pdfParse from 'pdf-parse';
+import mammoth from 'mammoth';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const extractTextFromResume = (filePath) => {
+const extractTextFromResume = async (filePath) => {
   const fullPath = path.resolve(__dirname, '..', filePath.replace(/^\//, ''));
-  const raw = fs.readFileSync(fullPath, 'utf8');
-  return raw.replace(/\s+/g, ' ').trim();
+  const ext = path.extname(fullPath).toLowerCase();
+
+  if (ext === '.pdf') {
+    const buffer = fs.readFileSync(fullPath);
+    const data = await pdfParse(buffer);
+    return data.text.replace(/\s+/g, ' ').trim();
+  }
+
+  if (ext === '.docx') {
+    const result = await mammoth.extractRawText({ path: fullPath });
+    return result.value.replace(/\s+/g, ' ').trim();
+  }
+
+  if (ext === '.txt') {
+    const raw = fs.readFileSync(fullPath, 'utf8');
+    return raw.replace(/\s+/g, ' ').trim();
+  }
+
+  throw new Error('Unsupported resume format. Please upload a PDF, DOCX, or TXT file.');
 };
 
 const extractCandidateData = (text) => {
@@ -52,7 +71,7 @@ export const analyzeResume = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Resume file not found' });
     }
 
-    const text = extractTextFromResume(filePath);
+    const text = await extractTextFromResume(filePath);
     const analysis = extractCandidateData(text);
 
     res.status(200).json({ success: true, analysis });
