@@ -3,6 +3,7 @@ import AuthPage from './pages/AuthPage'
 import JobsPage from './pages/JobsPage'
 import ResumePage from './pages/ResumePage'
 import RankingPage from './pages/RankingPage'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const Home = () => (
   <section className="hero-card">
@@ -45,10 +46,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/jobs" element={<JobsPage />} />
-          <Route path="/resume" element={<ResumePage />} />
-          <Route path="/ranking" element={<RankingPage />} />
+          <Route path="/resume" element={<ProtectedRoute allowedRoles={['applicant']}><ResumePage /></ProtectedRoute>} />
+          <Route path="/ranking" element={<ProtectedRoute allowedRoles={['applicant']}><RankingPage /></ProtectedRoute>} />
           <Route path="/auth" element={<AuthPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
         </Routes>
       </main>
     </div>

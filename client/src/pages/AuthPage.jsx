@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 function AuthPage() {
+  const navigate = useNavigate();
   const [mode, setMode] = useState('login');
   const [form, setForm] = useState({
     name: '',
@@ -21,7 +23,14 @@ function AuthPage() {
 
       const { data } = await api.post(endpoint, payload);
       localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       setMessage(`${mode === 'login' ? 'Logged in' : 'Registered'} successfully`);
+
+      if (data.user?.role === 'applicant') {
+        navigate('/resume');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       setMessage(error.response?.data?.message || 'Something went wrong');
     }
