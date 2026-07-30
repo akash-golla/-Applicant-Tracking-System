@@ -1,14 +1,18 @@
 # AI-HR-Platform
 
-A full-stack AI-powered HR recruitment platform built with React, Vite, Express, MongoDB, and JWT authentication.
+A full-stack AI-powered HR recruitment platform built with React, Vite, Express, MongoDB, JWT authentication, and ATS-inspired workflows.
 
 ## Features
-- Recruiter and applicant authentication
-- Job posting and management
-- Applications and status tracking
-- Resume upload flow
-- AI analysis placeholder endpoint
-- Dashboard API routes
+- Recruiter and applicant authentication with JWT
+- Role-based authorization for recruiter and applicant routes
+- Public job board with search and filtering
+- Job CRUD for recruiters
+- Applicant resume upload with Multer
+- Resume parsing and candidate insight generation
+- Semantic-style skill matching and candidate scoring
+- Application lifecycle tracking from applied through rejected
+- Notifications and email notification flow
+- Dashboard endpoints for recruiter and applicant insights
 
 ## Local development
 
@@ -32,7 +36,10 @@ npm run dev
 - POST /api/auth/login
 - GET /api/jobs
 - POST /api/applications
+- PATCH /api/applications/:id/status
 - POST /api/upload
 - POST /api/ai/analyze
 - GET /api/dashboard/recruiter
 - GET /api/dashboard/applicant
+- GET /api/notifications
+- POST /api/notifications/interview

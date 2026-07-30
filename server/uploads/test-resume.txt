@@ -1,0 +1,4 @@
+Jane Doe
+Senior React Developer with 5 years experience
+Bachelor of Science
+Skills: JavaScript, React, Node.js, TypeScript

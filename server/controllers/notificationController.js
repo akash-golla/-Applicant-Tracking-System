@@ -1,4 +1,5 @@
 import Notification from '../models/Notification.js';
+import { sendEmailNotification } from '../services/emailService.js';
 
 export const getNotifications = async (req, res) => {
   try {
@@ -17,14 +18,20 @@ export const sendInterviewEmail = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Email and message are required' });
     }
 
+    await sendEmailNotification({
+      to: email,
+      subject: 'Interview Invitation',
+      text: message,
+    });
+
     await Notification.create({
       userId: req.user._id,
       userModel: req.user.role === 'recruiter' ? 'Recruiter' : 'Applicant',
-      message: `Interview email prepared for ${email}`,
+      message: `Interview email sent to ${email}`,
       type: 'email',
     });
 
-    res.status(200).json({ success: true, message: 'Interview email request recorded' });
+    res.status(200).json({ success: true, message: 'Interview email sent successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

@@ -1,10 +1,11 @@
 import Application from '../models/Application.js';
 import Job from '../models/Job.js';
 import Notification from '../models/Notification.js';
+import { analyzeResumeWithAi } from '../services/aiService.js';
 
 export const createApplication = async (req, res) => {
   try {
-    const { jobId, resumeURL } = req.body;
+    const { jobId, resumeURL, aiAnalysis } = req.body;
 
     const job = await Job.findById(jobId);
     if (!job) {
@@ -16,12 +17,14 @@ export const createApplication = async (req, res) => {
       return res.status(400).json({ success: false, message: 'You already applied to this job' });
     }
 
+    const analysis = aiAnalysis || (resumeURL ? await analyzeResumeWithAi(resumeURL, job.description, req.user.name) : null);
+
     const application = await Application.create({
       applicantId: req.user._id,
       jobId,
       resumeURL: resumeURL || '',
-      aiScore: 0,
-      aiSummary: '',
+      aiScore: analysis?.matchScore || 0,
+      aiSummary: analysis?.summary || '',
       status: 'applied',
     });
 
@@ -65,6 +68,11 @@ export const updateApplicationStatus = async (req, res) => {
 
     if (application.jobId.recruiterId.toString() !== req.user._id.toString()) {
       return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+
+    const allowedStatuses = ['applied', 'screening', 'interview', 'offered', 'rejected'];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ success: false, message: 'Invalid application status' });
     }
 
     application.status = status;
