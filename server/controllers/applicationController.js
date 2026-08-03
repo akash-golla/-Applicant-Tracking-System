@@ -3,9 +3,21 @@ import Job from '../models/Job.js';
 import Notification from '../models/Notification.js';
 import { analyzeResumeWithAi } from '../services/aiService.js';
 
+export const normalizeApplicationStatus = (status) => {
+  const normalized = String(status || '').toLowerCase();
+  const legacyMap = {
+    reviewed: 'screening',
+    shortlisted: 'screening',
+    interviewed: 'interview',
+    hired: 'offered',
+  };
+
+  return legacyMap[normalized] || normalized;
+};
+
 export const createApplication = async (req, res) => {
   try {
-    const { jobId, resumeURL, aiAnalysis } = req.body;
+    const { jobId, resumeURL, aiAnalysis, status } = req.body;
 
     const job = await Job.findById(jobId);
     if (!job) {
@@ -25,7 +37,8 @@ export const createApplication = async (req, res) => {
       resumeURL: resumeURL || '',
       aiScore: analysis?.matchScore || 0,
       aiSummary: analysis?.summary || '',
-      status: 'applied',
+      aiAnalysis: analysis || undefined,
+      status: normalizeApplicationStatus(status || 'applied') || 'applied',
     });
 
     await Notification.create({
@@ -43,13 +56,32 @@ export const createApplication = async (req, res) => {
 
 export const getApplications = async (req, res) => {
   try {
-    const query = req.user.role === 'recruiter'
+    const { skills, minScore, experience } = req.query;
+    const baseQuery = req.user.role === 'recruiter'
       ? { jobId: { $in: await Job.find({ recruiterId: req.user._id }).select('_id') } }
       : { applicantId: req.user._id };
 
+    const query = { ...baseQuery };
+
+    if (skills) {
+      const skillList = skills.split(',').map((value) => value.trim()).filter(Boolean);
+      if (skillList.length > 0) {
+        query['aiAnalysis.skills'] = { $in: skillList };
+      }
+    }
+
+    if (minScore) {
+      query.aiScore = { $gte: Number(minScore) };
+    }
+
+    if (experience) {
+      query['aiAnalysis.experience'] = { $regex: experience, $options: 'i' };
+    }
+
     const applications = await Application.find(query)
       .populate('jobId', 'title company location')
-      .populate('applicantId', 'name email phone skills');
+      .populate('applicantId', 'name email phone skills')
+      .sort({ createdAt: -1 });
 
     res.status(200).json({ success: true, applications });
   } catch (error) {
@@ -70,18 +102,19 @@ export const updateApplicationStatus = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
+    const normalizedStatus = normalizeApplicationStatus(status);
     const allowedStatuses = ['applied', 'screening', 'interview', 'offered', 'rejected'];
-    if (!allowedStatuses.includes(status)) {
+    if (!allowedStatuses.includes(normalizedStatus)) {
       return res.status(400).json({ success: false, message: 'Invalid application status' });
     }
 
-    application.status = status;
+    application.status = normalizedStatus;
     await application.save();
 
     await Notification.create({
       userId: application.applicantId,
       userModel: 'Applicant',
-      message: `Your application for ${application.jobId.title} is now ${status}`,
+      message: `Your application for ${application.jobId.title} is now ${normalizedStatus}`,
       type: 'status',
     });
 

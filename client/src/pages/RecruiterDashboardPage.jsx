@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Alert, Box, Chip, CircularProgress, Paper, Stack, TextField, Typography } from '@mui/material';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Alert, Box, Button, Chip, CircularProgress, MenuItem, Paper, Stack, TextField, Typography } from '@mui/material';
 import api from '../services/api';
 
 const fetchDashboard = async () => {
@@ -14,7 +14,10 @@ const fetchApplications = async () => {
 };
 
 function RecruiterDashboardPage() {
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
+  const [jobForm, setJobForm] = useState({ title: '', description: '', company: '', location: '', salary: '', experience: '', requiredSkills: '' });
+  const [message, setMessage] = useState('');
   const { data: stats, isLoading: statsLoading, error: statsError } = useQuery({ queryKey: ['recruiter-stats'], queryFn: fetchDashboard });
   const { data: applications = [], isLoading: appsLoading, error: appsError } = useQuery({ queryKey: ['recruiter-applications'], queryFn: fetchApplications });
 
@@ -25,6 +28,32 @@ function RecruiterDashboardPage() {
       return haystack.includes(query);
     });
   }, [applications, search]);
+
+  const handleCreateJob = async (event) => {
+    event.preventDefault();
+    try {
+      const payload = {
+        ...jobForm,
+        requiredSkills: jobForm.requiredSkills.split(',').map((value) => value.trim()).filter(Boolean),
+      };
+      await api.post('/jobs', payload);
+      setMessage('Job created successfully.');
+      setJobForm({ title: '', description: '', company: '', location: '', salary: '', experience: '', requiredSkills: '' });
+      queryClient.invalidateQueries({ queryKey: ['recruiter-stats'] });
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Unable to create job.');
+    }
+  };
+
+  const updateStatus = async (applicationId, nextStatus) => {
+    try {
+      await api.patch(`/applications/${applicationId}/status`, { status: nextStatus });
+      queryClient.invalidateQueries({ queryKey: ['recruiter-applications'] });
+      setMessage(`Status updated to ${nextStatus}.`);
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Unable to update status.');
+    }
+  };
 
   return (
     <Stack spacing={3}>
@@ -52,6 +81,27 @@ function RecruiterDashboardPage() {
       </Paper>
 
       <Paper elevation={6} sx={{ p: 3, borderRadius: 4 }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>Create a job</Typography>
+        {message && <Alert severity="info" sx={{ mb: 2 }}>{message}</Alert>}
+        <Box component="form" onSubmit={handleCreateJob} sx={{ display: 'grid', gap: 2 }}>
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+            <TextField label="Title" value={jobForm.title} onChange={(event) => setJobForm({ ...jobForm, title: event.target.value })} required fullWidth />
+            <TextField label="Company" value={jobForm.company} onChange={(event) => setJobForm({ ...jobForm, company: event.target.value })} required fullWidth />
+          </Stack>
+          <TextField label="Description" value={jobForm.description} onChange={(event) => setJobForm({ ...jobForm, description: event.target.value })} multiline minRows={3} required fullWidth />
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+            <TextField label="Location" value={jobForm.location} onChange={(event) => setJobForm({ ...jobForm, location: event.target.value })} required fullWidth />
+            <TextField label="Salary" value={jobForm.salary} onChange={(event) => setJobForm({ ...jobForm, salary: event.target.value })} fullWidth />
+          </Stack>
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+            <TextField label="Experience" value={jobForm.experience} onChange={(event) => setJobForm({ ...jobForm, experience: event.target.value })} required fullWidth />
+            <TextField label="Required Skills (comma separated)" value={jobForm.requiredSkills} onChange={(event) => setJobForm({ ...jobForm, requiredSkills: event.target.value })} fullWidth />
+          </Stack>
+          <Button type="submit" variant="contained">Create Job</Button>
+        </Box>
+      </Paper>
+
+      <Paper elevation={6} sx={{ p: 3, borderRadius: 4 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>Applications pipeline</Typography>
         <TextField label="Search applications" value={search} onChange={(e) => setSearch(e.target.value)} fullWidth sx={{ mb: 2 }} />
         {appsLoading && <Box display="flex" justifyContent="center"><CircularProgress /></Box>}
@@ -66,6 +116,13 @@ function RecruiterDashboardPage() {
               <Stack direction="row" spacing={1} flexWrap="wrap">
                 <Chip label={application.status} color="primary" />
                 {application.aiScore ? <Chip label={`${application.aiScore}% match`} /> : null}
+                <TextField select label="Update status" size="small" value={application.status} onChange={(event) => updateStatus(application._id, event.target.value)} sx={{ minWidth: 160 }}>
+                  <MenuItem value="applied">Applied</MenuItem>
+                  <MenuItem value="screening">Screening</MenuItem>
+                  <MenuItem value="interview">Interview</MenuItem>
+                  <MenuItem value="offered">Offered</MenuItem>
+                  <MenuItem value="rejected">Rejected</MenuItem>
+                </TextField>
               </Stack>
             </Stack>
           </Paper>

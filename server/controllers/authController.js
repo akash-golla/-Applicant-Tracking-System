@@ -5,7 +5,12 @@ import Applicant from '../models/Applicant.js';
 import { validateRegisterInput } from '../validators/authValidator.js';
 
 const generateToken = (user, role) => {
-  return jwt.sign({ id: user._id, role }, process.env.JWT_SECRET || 'dev_secret', {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET is not configured');
+  }
+
+  return jwt.sign({ id: user._id, role }, secret, {
     expiresIn: '7d',
   });
 };

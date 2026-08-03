@@ -14,7 +14,12 @@ export const protect = async (req, res, next) => {
       return res.status(401).json({ success: false, message: 'Not authorized, no token' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'dev_secret');
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      return res.status(500).json({ success: false, message: 'JWT_SECRET is not configured' });
+    }
+
+    const decoded = jwt.verify(token, secret);
 
     if (decoded.role === 'recruiter') {
       req.user = await Recruiter.findById(decoded.id).select('-password');

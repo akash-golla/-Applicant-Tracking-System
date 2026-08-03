@@ -5,11 +5,12 @@ import {
   getApplications,
   updateApplicationStatus,
 } from '../controllers/applicationController.js';
+import { validate, createApplicationValidation, updateStatusValidation } from '../validators/requestValidator.js';
 
 const router = express.Router();
 
-router.post('/', protect, authorizeRoles('applicant'), createApplication);
+router.post('/', protect, authorizeRoles('applicant'), validate(createApplicationValidation), createApplication);
 router.get('/', protect, getApplications);
-router.patch('/:id/status', protect, authorizeRoles('recruiter'), updateApplicationStatus);
+router.patch('/:id/status', protect, authorizeRoles('recruiter'), validate(updateStatusValidation), updateApplicationStatus);
 
 export default router;

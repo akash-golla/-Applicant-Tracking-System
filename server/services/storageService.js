@@ -35,7 +35,7 @@ export const uploadResumeToStorage = async (filePath, originalName, mimeType = '
           Key: key,
           Body: fileBuffer,
           ContentType: mimeType,
-          ACL: 'public-read',
+          ServerSideEncryption: 'AES256',
         })
         .promise();
 
