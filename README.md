@@ -1,22 +1,28 @@
 # AI-HR-Platform
 
-A full-stack AI-powered HR recruitment platform built with React, Vite, Express, MongoDB, JWT authentication, and ATS-inspired workflows.
+AI-HR-Platform is a full-stack applicant tracking system built with React, Vite, Express, MongoDB, JWT authentication, and ATS-inspired recruitment workflows.
 
-## Features
+## What is included
 - Recruiter and applicant authentication with JWT
 - Role-based authorization for recruiter and applicant routes
 - Public job board with search and filtering
-- Job CRUD for recruiters
+- Recruiter job CRUD and application pipeline updates
 - Applicant resume upload with Multer
-- Resume parsing and candidate insight generation
-- Semantic-style skill matching and candidate scoring
-- Application lifecycle tracking from applied through rejected
-- Notifications and email notification flow
-- Dashboard endpoints for recruiter and applicant insights
+- Resume parsing, skill extraction, matching, and candidate scoring
+- Application lifecycle tracking from applied to rejected
+- Email notifications for interview and status updates
+- Recruiter and applicant dashboard endpoints
+- Docker and docker-compose support for local deployment
+
+## Prerequisites
+- Node.js 20+
+- MongoDB 7+ (or use the built-in local fallback in development)
+- Optional: OpenAI or Gemini API key for richer AI summaries
+- Optional: AWS credentials for S3-backed resume storage
 
 ## Local development
 
-### Backend
+### 1. Backend
 ```bash
 cd server
 npm install
@@ -24,11 +30,37 @@ cp .env.example .env
 npm run dev
 ```
 
-### Frontend
+### 2. Frontend
 ```bash
 cd client
 npm install
 npm run dev
+```
+
+### 3. Docker (optional)
+```bash
+docker compose up --build
+```
+
+## Environment variables
+Create a server/.env file with values similar to:
+
+```env
+PORT=5000
+MONGO_URI=mongodb://127.0.0.1:27017/ai-hr-platform
+CLIENT_URL=http://localhost:5173
+JWT_SECRET=change_this_secret
+OPENAI_API_KEY=
+GEMINI_API_KEY=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_REGION=us-east-1
+AWS_S3_BUCKET_NAME=
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASS=
+SMTP_FROM=no-reply@ai-hr.local
 ```
 
 ## API highlights
@@ -43,3 +75,7 @@ npm run dev
 - GET /api/dashboard/applicant
 - GET /api/notifications
 - POST /api/notifications/interview
+
+## Verification
+The project currently builds successfully and its backend tests pass.
+

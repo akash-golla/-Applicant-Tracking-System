@@ -18,7 +18,7 @@ function ApplicantDashboardPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper elevation={6} sx={{ p: 3, borderRadius: 4 }}>
+      <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)' }}>
         <Typography variant="h5">Applicant dashboard</Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>Review your applications and stay updated on status changes.</Typography>
         {statsLoading && <Box display="flex" justifyContent="center"><CircularProgress /></Box>}
@@ -37,12 +37,12 @@ function ApplicantDashboardPage() {
         )}
       </Paper>
 
-      <Paper elevation={6} sx={{ p: 3, borderRadius: 4 }}>
+      <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <Typography variant="h6" sx={{ mb: 2 }}>Application history</Typography>
         {appsLoading && <Box display="flex" justifyContent="center"><CircularProgress /></Box>}
         {appsError && <Alert severity="error">Could not load application history.</Alert>}
         {applications.map((application) => (
-          <Paper key={application._id} variant="outlined" sx={{ p: 2, mb: 1.5, borderRadius: 3 }}>
+          <Paper key={application._id} variant="outlined" sx={{ p: 2, mb: 1.5, borderRadius: 3, bgcolor: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.12)' }}>
             <Typography variant="subtitle1">{application.jobId?.title || 'Job'}</Typography>
             <Typography variant="body2" color="text.secondary">Status: {application.status}</Typography>
             {application.aiSummary ? <Typography variant="body2">AI summary: {application.aiSummary}</Typography> : null}

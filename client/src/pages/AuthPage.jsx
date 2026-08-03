@@ -95,9 +95,12 @@ function AuthPage() {
       elevation={6}
       sx={{
         p: 4,
-        maxWidth: 480,
+        maxWidth: 520,
         mx: 'auto',
-        borderRadius: 4
+        borderRadius: 4,
+        bgcolor: 'rgba(255,255,255,0.08)',
+        border: '1px solid rgba(255,255,255,0.12)',
+        backdropFilter: 'blur(16px)',
       }}
     >
 
@@ -228,6 +231,7 @@ function AuthPage() {
             type="submit"
             variant="contained"
             disabled={isSubmitting}
+            sx={{ py: 1.2, borderRadius: 2 }}
           >
 
             {isSubmitting

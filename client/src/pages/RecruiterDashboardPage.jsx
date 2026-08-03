@@ -57,7 +57,7 @@ function RecruiterDashboardPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper elevation={6} sx={{ p: 3, borderRadius: 4 }}>
+      <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)' }}>
         <Typography variant="h5">Recruiter dashboard</Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>Track postings, applicants, and hiring progress in one place.</Typography>
         {statsLoading && <Box display="flex" justifyContent="center"><CircularProgress /></Box>}
@@ -80,7 +80,7 @@ function RecruiterDashboardPage() {
         )}
       </Paper>
 
-      <Paper elevation={6} sx={{ p: 3, borderRadius: 4 }}>
+      <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <Typography variant="h6" sx={{ mb: 2 }}>Create a job</Typography>
         {message && <Alert severity="info" sx={{ mb: 2 }}>{message}</Alert>}
         <Box component="form" onSubmit={handleCreateJob} sx={{ display: 'grid', gap: 2 }}>
@@ -101,13 +101,13 @@ function RecruiterDashboardPage() {
         </Box>
       </Paper>
 
-      <Paper elevation={6} sx={{ p: 3, borderRadius: 4 }}>
+      <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
         <Typography variant="h6" sx={{ mb: 2 }}>Applications pipeline</Typography>
         <TextField label="Search applications" value={search} onChange={(e) => setSearch(e.target.value)} fullWidth sx={{ mb: 2 }} />
         {appsLoading && <Box display="flex" justifyContent="center"><CircularProgress /></Box>}
         {appsError && <Alert severity="error">Could not load applications.</Alert>}
         {filteredApplications.map((application) => (
-          <Paper key={application._id} variant="outlined" sx={{ p: 2, mb: 1.5, borderRadius: 3 }}>
+          <Paper key={application._id} variant="outlined" sx={{ p: 2, mb: 1.5, borderRadius: 3, bgcolor: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.12)' }}>
             <Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" spacing={1}>
               <Box>
                 <Typography variant="subtitle1">{application.applicantId?.name || 'Applicant'}</Typography>
