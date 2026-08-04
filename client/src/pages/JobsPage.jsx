@@ -41,13 +41,13 @@ function JobsPage() {
   };
 
   return (
-    <Paper elevation={6} sx={{ p: 3, borderRadius: 4 }}>
+    <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)', boxShadow: '0 24px 70px rgba(0,0,0,0.22)' }}>
       <Stack spacing={2}>
-        <Typography variant="h5">Public job board</Typography>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>Public job board</Typography>
         <Typography variant="body2" color="text.secondary">Browse active roles, filter by keyword, and apply with confidence.</Typography>
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-          <TextField label="Search jobs" value={query} onChange={(e) => setQuery(e.target.value)} fullWidth />
-          <TextField label="Filter by skill" value={skillFilter} onChange={(e) => setSkillFilter(e.target.value)} fullWidth />
+          <TextField label="Search jobs" value={query} onChange={(e) => setQuery(e.target.value)} fullWidth sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }} />
+          <TextField label="Filter by skill" value={skillFilter} onChange={(e) => setSkillFilter(e.target.value)} fullWidth sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }} />
         </Stack>
 
         {isLoading && <Box display="flex" justifyContent="center"><CircularProgress /></Box>}
@@ -59,16 +59,23 @@ function JobsPage() {
         <Grid container spacing={2}>
           {filteredJobs.map((job) => (
             <Grid item xs={12} md={6} key={job._id}>
-              <Paper variant="outlined" sx={{ p: 2.5, height: '100%', borderRadius: 3 }}>
+              <Paper variant="outlined" sx={{ p: 2.5, height: '100%', borderRadius: 3, bgcolor: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.12)', boxShadow: '0 16px 42px rgba(0,0,0,0.16)' }}>
                 <Stack spacing={1.2}>
-                  <Typography variant="h6">{job.title}</Typography>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
+                    <Typography variant="h6" sx={{ fontWeight: 700 }}>{job.title}</Typography>
+                    <Chip label="Featured" size="small" color="primary" sx={{ borderRadius: 999 }} />
+                  </Stack>
                   <Typography variant="body2" color="text.secondary">{job.company}</Typography>
-                  <Typography variant="body2">{job.location}</Typography>
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+                    <Typography variant="body2">📍 {job.location}</Typography>
+                    <Typography variant="body2">💼 {job.experience}</Typography>
+                    <Typography variant="body2">💰 {job.salary}</Typography>
+                  </Stack>
                   <Typography variant="body2">{job.description}</Typography>
                   <Stack direction="row" spacing={1} flexWrap="wrap">
-                    {job.requiredSkills?.map((skill) => <Chip key={skill} label={skill} size="small" />)}
+                    {job.requiredSkills?.map((skill) => <Chip key={skill} label={skill} size="small" sx={{ borderRadius: 999 }} />)}
                   </Stack>
-                  <Button variant="contained" onClick={() => applyToJob(job._id)}>Apply</Button>
+                  <Button variant="contained" onClick={() => applyToJob(job._id)} sx={{ borderRadius: 999, mt: 0.5 }}>Apply</Button>
                 </Stack>
               </Paper>
             </Grid>

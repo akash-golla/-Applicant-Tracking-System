@@ -94,19 +94,20 @@ function AuthPage() {
     <Paper
       elevation={6}
       sx={{
-        p: 4,
-        maxWidth: 520,
+        p: { xs: 3, md: 4 },
+        maxWidth: 560,
         mx: 'auto',
         borderRadius: 4,
         bgcolor: 'rgba(255,255,255,0.08)',
         border: '1px solid rgba(255,255,255,0.12)',
         backdropFilter: 'blur(16px)',
+        boxShadow: '0 24px 70px rgba(0,0,0,0.24)',
       }}
     >
 
       <Stack spacing={2}>
 
-        <Typography variant="h5">
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
           {mode === 'login'
             ? 'Welcome back'
             : 'Create your account'}
@@ -125,20 +126,25 @@ function AuthPage() {
           color="primary"
           value={mode}
           exclusive
-          onChange={(_, value) =>
-            value && setMode(value)
-          }
+          onChange={(_, value) => value && setMode(value)}
           fullWidth
+          sx={{
+            '& .MuiToggleButton-root': {
+              borderRadius: 999,
+              border: '1px solid rgba(255,255,255,0.14)',
+              px: 2,
+              py: 1,
+              fontWeight: 600,
+              color: 'inherit',
+            },
+            '& .Mui-selected': {
+              bgcolor: 'rgba(120, 184, 255, 0.2) !important',
+              color: '#f7fbff',
+            },
+          }}
         >
-
-          <ToggleButton value="login">
-            Login
-          </ToggleButton>
-
-          <ToggleButton value="register">
-            Register
-          </ToggleButton>
-
+          <ToggleButton value="login">Login</ToggleButton>
+          <ToggleButton value="register">Register</ToggleButton>
         </ToggleButtonGroup>
 
 
@@ -149,7 +155,7 @@ function AuthPage() {
           noValidate
           sx={{
             display: 'grid',
-            gap: 2
+            gap: 2,
           }}
         >
 
@@ -161,6 +167,7 @@ function AuthPage() {
                 handleChange('name', e.target.value)
               }
               required
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
             />
           )}
 
@@ -174,6 +181,7 @@ function AuthPage() {
               handleChange('email', e.target.value)
             }
             required
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
           />
 
 
@@ -186,6 +194,7 @@ function AuthPage() {
               handleChange('password', e.target.value)
             }
             required
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
           />
 
 
@@ -197,6 +206,7 @@ function AuthPage() {
             onChange={(e) =>
               handleChange('role', e.target.value)
             }
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
           >
 
             <MenuItem value="applicant">
@@ -221,6 +231,7 @@ function AuthPage() {
                 handleChange('company', e.target.value)
               }
               required
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 3 } }}
             />
 
           )}
@@ -231,7 +242,7 @@ function AuthPage() {
             type="submit"
             variant="contained"
             disabled={isSubmitting}
-            sx={{ py: 1.2, borderRadius: 2 }}
+            sx={{ py: 1.2, borderRadius: 999, fontWeight: 700 }}
           >
 
             {isSubmitting
@@ -252,11 +263,12 @@ function AuthPage() {
           <Alert
             severity={
               message
-              .toLowerCase()
-              .includes('success')
-              ? 'success'
-              : 'error'
+                .toLowerCase()
+                .includes('success')
+                ? 'success'
+                : 'error'
             }
+            sx={{ borderRadius: 3 }}
           >
             {message}
           </Alert>

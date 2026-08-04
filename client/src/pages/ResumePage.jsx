@@ -89,7 +89,7 @@ function ResumePage() {
   };
 
   return (
-    <section className="panel resume-shell">
+    <section className="panel resume-shell" style={{ boxShadow: '0 24px 70px rgba(0,0,0,0.22)' }}>
       <div className="resume-intro">
         <p className="eyebrow">Resume intelligence</p>
         <h2>Upload your resume and get instant insights</h2>
@@ -104,7 +104,7 @@ function ResumePage() {
 
       {!isAuthenticated ? (
         <div className="auth-form">
-          <button type="button" onClick={() => navigate('/auth')}>Go to sign in</button>
+          <button type="button" onClick={() => navigate('/auth')} style={{ borderRadius: 999 }}>Go to sign in</button>
         </div>
       ) : (
         <div
@@ -130,10 +130,10 @@ function ResumePage() {
           </label>
 
           <form onSubmit={handleUpload} className="upload-actions">
-            <button type="button" onClick={() => document.getElementById('resume-upload')?.click()}>
+            <button type="button" onClick={() => document.getElementById('resume-upload')?.click()} style={{ borderRadius: 999 }}>
               Choose resume
             </button>
-            <button type="submit" disabled={!file || isAnalyzing}>
+            <button type="submit" disabled={!file || isAnalyzing} style={{ borderRadius: 999 }}>
               {isAnalyzing ? 'Analyzing...' : 'Analyze now'}
             </button>
           </form>

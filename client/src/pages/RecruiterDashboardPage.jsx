@@ -57,31 +57,31 @@ function RecruiterDashboardPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)' }}>
-        <Typography variant="h5">Recruiter dashboard</Typography>
+      <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)', boxShadow: '0 24px 70px rgba(0,0,0,0.22)' }}>
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>Recruiter dashboard</Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>Track postings, applicants, and hiring progress in one place.</Typography>
         {statsLoading && <Box display="flex" justifyContent="center"><CircularProgress /></Box>}
         {statsError && <Alert severity="error">Could not load recruiter stats.</Alert>}
         {stats && (
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-            <Paper variant="outlined" sx={{ p: 2, flex: 1 }}>
+            <Paper variant="outlined" sx={{ p: 2.2, flex: 1, bgcolor: 'rgba(120, 184, 255, 0.08)', borderColor: 'rgba(120, 184, 255, 0.2)' }}>
               <Typography variant="subtitle2" color="text.secondary">Jobs</Typography>
-              <Typography variant="h4">{stats.jobs}</Typography>
+              <Typography variant="h4" sx={{ fontWeight: 700 }}>{stats.jobs}</Typography>
             </Paper>
-            <Paper variant="outlined" sx={{ p: 2, flex: 1 }}>
+            <Paper variant="outlined" sx={{ p: 2.2, flex: 1, bgcolor: 'rgba(159, 124, 255, 0.08)', borderColor: 'rgba(159, 124, 255, 0.2)' }}>
               <Typography variant="subtitle2" color="text.secondary">Applications</Typography>
-              <Typography variant="h4">{stats.applications}</Typography>
+              <Typography variant="h4" sx={{ fontWeight: 700 }}>{stats.applications}</Typography>
             </Paper>
-            <Paper variant="outlined" sx={{ p: 2, flex: 1 }}>
+            <Paper variant="outlined" sx={{ p: 2.2, flex: 1, bgcolor: 'rgba(100, 224, 255, 0.08)', borderColor: 'rgba(100, 224, 255, 0.2)' }}>
               <Typography variant="subtitle2" color="text.secondary">Applicants</Typography>
-              <Typography variant="h4">{stats.applicants}</Typography>
+              <Typography variant="h4" sx={{ fontWeight: 700 }}>{stats.applicants}</Typography>
             </Paper>
           </Stack>
         )}
       </Paper>
 
-      <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>Create a job</Typography>
+      <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 16px 42px rgba(0,0,0,0.18)' }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>Create a job</Typography>
         {message && <Alert severity="info" sx={{ mb: 2 }}>{message}</Alert>}
         <Box component="form" onSubmit={handleCreateJob} sx={{ display: 'grid', gap: 2 }}>
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
@@ -101,8 +101,8 @@ function RecruiterDashboardPage() {
         </Box>
       </Paper>
 
-      <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>Applications pipeline</Typography>
+      <Paper elevation={6} sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 16px 42px rgba(0,0,0,0.18)' }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>Applications pipeline</Typography>
         <TextField label="Search applications" value={search} onChange={(e) => setSearch(e.target.value)} fullWidth sx={{ mb: 2 }} />
         {appsLoading && <Box display="flex" justifyContent="center"><CircularProgress /></Box>}
         {appsError && <Alert severity="error">Could not load applications.</Alert>}
@@ -114,8 +114,8 @@ function RecruiterDashboardPage() {
                 <Typography variant="body2" color="text.secondary">{application.jobId?.title || 'Job'}</Typography>
               </Box>
               <Stack direction="row" spacing={1} flexWrap="wrap">
-                <Chip label={application.status} color="primary" />
-                {application.aiScore ? <Chip label={`${application.aiScore}% match`} /> : null}
+                <Chip label={application.status} color="primary" sx={{ borderRadius: 999, px: 1 }} />
+                {application.aiScore ? <Chip label={`${application.aiScore}% match`} variant="outlined" sx={{ borderRadius: 999, px: 1 }} /> : null}
                 <TextField select label="Update status" size="small" value={application.status} onChange={(event) => updateStatus(application._id, event.target.value)} sx={{ minWidth: 160 }}>
                   <MenuItem value="applied">Applied</MenuItem>
                   <MenuItem value="screening">Screening</MenuItem>

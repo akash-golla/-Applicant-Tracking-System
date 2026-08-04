@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Alert, Chip, CircularProgress, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Box, Chip, CircularProgress, Paper, Stack, TextField, Typography } from '@mui/material';
 import api from '../services/api';
 
 const fetchApplications = async () => {

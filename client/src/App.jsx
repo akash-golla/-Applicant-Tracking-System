@@ -11,19 +11,19 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 const Home = () => (
   <Box sx={{ display: 'grid', gap: 3 }}>
-    <Box sx={{ p: { xs: 3, md: 5 }, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)' }}>
+    <Box sx={{ p: { xs: 3, md: 5 }, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)', boxShadow: '0 24px 70px rgba(0,0,0,0.24)' }}>
       <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} alignItems="center" justifyContent="space-between">
         <Box sx={{ flex: 1 }}>
-          <Typography variant="overline" color="primary">AI-powered HR Recruitment</Typography>
-          <Typography variant="h3" sx={{ mt: 1, mb: 2 }}>Recruit faster with intelligent workflows.</Typography>
-          <Typography variant="body1" color="text.secondary">Manage applicants, analyze resumes, score candidates, and keep your hiring pipeline moving from one place.</Typography>
+          <Typography variant="overline" sx={{ color: '#8fc8ff', letterSpacing: '0.28em', fontWeight: 700 }}>AI-powered HR Recruitment</Typography>
+          <Typography variant="h3" sx={{ mt: 1, mb: 2, fontWeight: 800 }}>Recruit faster with intelligent workflows.</Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 720, lineHeight: 1.8 }}>Manage applicants, analyze resumes, score candidates, and keep your hiring pipeline moving from one place.</Typography>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 3 }}>
-            <Button component={Link} to="/jobs" variant="contained">Browse jobs</Button>
-            <Button component={Link} to="/resume" variant="outlined">Analyze resume</Button>
-            <Button component={Link} to="/ranking" variant="outlined">View ranking</Button>
+            <Button component={Link} to="/jobs" variant="contained" sx={{ borderRadius: 999, px: 2.5, py: 1.2 }}>Browse jobs</Button>
+            <Button component={Link} to="/resume" variant="outlined" sx={{ borderRadius: 999, px: 2.5, py: 1.2 }}>Analyze resume</Button>
+            <Button component={Link} to="/ranking" variant="outlined" sx={{ borderRadius: 999, px: 2.5, py: 1.2 }}>View ranking</Button>
           </Stack>
         </Box>
-        <Box sx={{ minWidth: { xs: '100%', md: 260 }, p: 2.5, borderRadius: 3, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <Box sx={{ minWidth: { xs: '100%', md: 280 }, p: 2.5, borderRadius: 3, bgcolor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)' }}>
           <Stack spacing={1.2}>
             <Typography variant="subtitle2" color="text.secondary">Platform highlights</Typography>
             <Chip label="Role-based auth" color="primary" variant="outlined" />
@@ -46,12 +46,13 @@ const DashboardPage = () => {
     }
   }, []);
 
-  return (
-    <Box sx={{ p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
-      <Typography variant="h5">Dashboard</Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>Welcome back, {user?.name || 'there'}.</Typography>
-    </Box>
-  );
+  if (!user?.role) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  return user.role === 'recruiter'
+    ? <Navigate to="/recruiter-dashboard" replace />
+    : <Navigate to="/applicant-dashboard" replace />;
 };
 
 function App() {
