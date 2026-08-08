@@ -10,19 +10,19 @@ AI-HR-Platform is a full-stack applicant tracking system built with React, Vite,
 - Applicant resume upload with Multer
 - Resume parsing, skill extraction, matching, and candidate scoring
 - Application lifecycle tracking from applied to rejected
-- Email notifications for interview and status updates
+- Email notifications for interview invites and status updates
 - Recruiter and applicant dashboard endpoints
 - Docker and docker-compose support for local deployment
 
 ## Prerequisites
 - Node.js 20+
-- MongoDB 7+ (or use the built-in local fallback in development)
+- MongoDB 7+ (or use local MongoDB in development)
 - Optional: OpenAI or Gemini API key for richer AI summaries
 - Optional: AWS credentials for S3-backed resume storage
 
 ## Local development
 
-### 1. Backend
+### Backend
 ```bash
 cd server
 npm install
@@ -30,20 +30,20 @@ cp .env.example .env
 npm run dev
 ```
 
-### 2. Frontend
+### Frontend
 ```bash
 cd client
 npm install
 npm run dev
 ```
 
-### 3. Docker (optional)
+### Optional: Docker
 ```bash
 docker compose up --build
 ```
 
 ## Environment variables
-Create a server/.env file with values similar to:
+Create `server/.env` from `server/.env.example` and set the required values:
 
 ```env
 PORT=5000
@@ -77,5 +77,5 @@ SMTP_FROM=no-reply@ai-hr.local
 - POST /api/notifications/interview
 
 ## Verification
-The project currently builds successfully and its backend tests pass.
+The backend builds successfully and its tests pass.
 
